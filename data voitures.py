@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from matplotlib import pyplot as plt
 
 data_init = pd.read_csv('Donnees-sur-le-parc-de-vehicule-au-niveau-communal.2023-05.csv',sep=";",skiprows=1)
@@ -22,6 +23,11 @@ nb_par_carburant["part_essence"] = nb_par_carburant["Essence"] / nb_par_carburan
 nb_par_carburant["part_diesel"] = nb_par_carburant["Diesel"] / nb_par_carburant.iloc[:, 0:7].sum(axis=1) * 100
 nb_par_carburant["part_electrique"] = (nb_par_carburant["Electrique et hydrogène"]) / nb_par_carburant.iloc[:, 0:7].sum(axis=1) * 100
 nb_par_carburant.head(2)
+
+nb_par_carburant["carburant_dominant"] = np.where(nb_par_carburant["part_essence"] == nb_par_carburant["part_diesel"], "same",
+                                                 np.where(nb_par_carburant["part_essence"] > nb_par_carburant["part_diesel"], "essence", "diesel"))
+
+nb_par_carburant["carburant_dominant"].unique()
 
 nb_par_carburant.to_csv("voitures_carburant_communes.csv")
 
